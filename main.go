@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/nikhil6392/go-auth-backend/config"
+	"github.com/nikhil6392/go-auth-backend/controllers"
 	"github.com/nikhil6392/go-auth-backend/models"
 )
 
@@ -33,6 +34,9 @@ func main() {
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "pong"})
 	})
+
+	// Signup route
+	r.POST("/signup", controllers.Signup)
 
 	// Use PORT from env or fallback to 8080
 	port := os.Getenv("PORT")
