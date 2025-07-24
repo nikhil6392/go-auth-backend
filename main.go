@@ -37,6 +37,7 @@ func main() {
 
 	// Signup route
 	r.POST("/signup", controllers.Signup)
+	r.POST("/login", controllers.Login)
 
 	// Use PORT from env or fallback to 8080
 	port := os.Getenv("PORT")
