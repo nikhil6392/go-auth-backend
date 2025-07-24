@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/nikhil6392/go-auth-backend/config"
+	"github.com/nikhil6392/go-auth-backend/models"
 )
 
 func main() {
@@ -18,6 +19,10 @@ func main() {
 
 	// 2. Connect to the database
 	config.ConnectDB()
+
+	// Run auto migration
+
+	config.DB.AutoMigrate(&models.User{})
 
 	// 3. Setup and start Gin server
 	r := gin.Default()
