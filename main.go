@@ -3,12 +3,14 @@ package main
 import (
 	"log"
 	"os"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/nikhil6392/go-auth-backend/config"
 	"github.com/nikhil6392/go-auth-backend/controllers"
 	"github.com/nikhil6392/go-auth-backend/models"
+	"github.com/nikhil6392/go-auth-backend/middleware"
 )
 
 func main() {
@@ -38,6 +40,16 @@ func main() {
 	// Signup route
 	r.POST("/signup", controllers.Signup)
 	r.POST("/login", controllers.Login)
+
+	r.GET("/protected", middleware.AuthMiddleware(), func(c *gin.Context) {
+		userID := c.MustGet("user_id")
+		email := c.MustGet("email")
+		c.JSON(http.StatusOK, gin.H{
+			"message": "You accessed a protected route!",
+			"user_id": userID,
+			"email":   email,
+		})
+	})
 
 	// Use PORT from env or fallback to 8080
 	port := os.Getenv("PORT")
