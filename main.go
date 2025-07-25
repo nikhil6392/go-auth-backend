@@ -23,6 +23,8 @@ func main() {
 	// 2. Connect to the database
 	config.ConnectDB()
 
+	config.ConnectRedis()
+
 	// Run auto migration
 
 	config.DB.AutoMigrate(&models.User{})
@@ -50,6 +52,8 @@ func main() {
 			"email":   email,
 		})
 	})
+	r.POST("/logout", controllers.Logout)
+
 
 	// Use PORT from env or fallback to 8080
 	port := os.Getenv("PORT")

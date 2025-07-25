@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/nikhil6392/go-auth-backend/config"
 )
 
 // Auth middleware checks for a valid JWT in the Authorization header
@@ -33,6 +34,13 @@ func AuthMiddleware() gin.HandlerFunc{
 
 		if err != nil || !token.Valid {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid or expired token"})
+			c.Abort()
+			return
+		}
+
+		isBlacklisted, err := config.RedisClient.Get(config.Ctx, "blacklist:"+tokenString).Result()
+		if err == nil && isBlacklisted == "true" {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token has been revoked"})
 			c.Abort()
 			return
 		}
